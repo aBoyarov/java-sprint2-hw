@@ -1,78 +1,72 @@
 
-import manager.Manager;
+import manager.IsMemoryHistoryManager;
+import manager.IsMemoryTaskManager;
 import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
+
 import java.util.*;
+
+import static model.Status.*;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
-        int id = 1;
-        ArrayList<Subtask> subtasks = new ArrayList<>();
+        IsMemoryTaskManager manager = new IsMemoryTaskManager();
+        IsMemoryHistoryManager history = new IsMemoryHistoryManager();
 
-        manager.newTask(new Task("Задача 1", "Описание задачи 1", ++id));
-        manager.newTask(new Task("Задача 2", "Описание задачи 2", ++id));
+        System.out.println("Проверка задач");
+
+        manager.addTask(new Task("Задача 1", "Описание", NEW));
+        manager.addTask(new Task("Задача 2", "Описание", NEW));
+        System.out.println(manager.getTask(1));
+        System.out.println(manager.getTask(2));
+
+        manager.updateTask(new Task("Задача 3", "Описание", NEW, 1));
+        System.out.println(manager.getAllTask());
+        manager.removeTasks(1);
+        manager.clearAllTasks();
 
 
-        subtasks.add(manager.newSubtask(new Subtask("Подзадача 1","Описание подзадачи 1",++id)));
-        subtasks.add(manager.newSubtask(new Subtask("Подзадача 2","Описание подзадачи 2",++id)));
-        manager.newEpic(new Epic("Эпик 1","Описание эпика 1", ++id, subtasks));
 
-        subtasks.clear();
-        subtasks.add(manager.newSubtask(new Subtask("Подзадача 3","Описание подзадачи 3",++id)));
-        manager.newEpic(new Epic("Эпик 2","Описание эпика 2", ++id, subtasks));
+        System.out.println("Проверка подзадач");
+        manager.addSubtask(new Subtask("ПодЗадача 1", "Описание", NEW));
+        manager.addSubtask(new Subtask("ПодЗадача 2", "Описание", NEW));
+        System.out.println(manager.getSubtask(1));
+        System.out.println(manager.getSubtask(2));
 
-        for (Epic epic: manager.getEpic()) {
-            Collection<Subtask> ar = epic.getSubtask();
-            System.out.println(ar.size());
-        }
+        manager.updateSubtask(new Subtask("ПодЗадача 3", "Описание", NEW, 1, 1));
+        System.out.println(manager.getAllSubtask());
+        manager.removeSubtask(1);
+        manager.clearAllSubtasks();
 
-        for (Epic epic: manager.getEpic()) {
-            System.out.println(epic);
-        }
-        for (Task task: manager.getTask()) {
-            System.out.println(task);
-        }
-        for (Subtask subtask: manager.getSubtask()) {
-            System.out.println(subtask);
-        }
 
-        System.out.println("В процессе");
-        for (Task task: manager.getTask()) {
-            manager.setStatusTask(task, Status.IN_PROGRESS);
-        }
-        System.out.println("Новый статус");
-        for (Task task: manager.getTask()) {
-            System.out.println(task);
-        }
+        System.out.println("Проверка эпиков");
 
-        System.out.println("Завершено");
-        for (Subtask subtask: manager.getSubtask()) {
-            manager.setStatusSubtask(subtask, Status.DONE);
-        }
-        System.out.println("Новый статус подзадач");
-        for (Epic epic: manager.getEpic()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask: manager.getSubtask()) {
-            System.out.println(subtask);
-        }
+        manager.addEpic(new Epic("Эпик 1", "Описание"));
+        manager.addEpic(new Epic("Эпик 2", "Описание"));
 
-        System.out.println("удаление задачи");
-        for (Task task: manager.getTask()) {
-            System.out.println(task);
-            manager.deleteTaskId(task.id);
 
-        }
+        manager.addSubtask(new Subtask("Подзадача 1", "Описание", NEW));
+        manager.addSubtask(new Subtask("Подзадача 2", "Описание", NEW));
+        manager.addSubtask(new Subtask("Подзадача 3", "Описание", NEW));
 
-        System.out.println("удаляем эпик");
-        for (Epic epic: manager.getEpic()) {
-            System.out.println(epic);
-            manager.deleteEpicId(epic.id);
 
-        }
+        //Обновляем подзадачу, меняем статус подзадачи на IN_PROGRESS и DONE, говорим какому эпику будет принадлежать
+        manager.updateSubtask(new Subtask("Подзадача 1", "Описание", DONE, 1, 5));
+        manager.updateSubtask(new Subtask("Подзадача 2", "Описание", DONE, 2, 5));
+        manager.updateSubtask(new Subtask("Подзадача 3", "Описание", IN_PROGRESS, 3, 6));
 
+        System.out.println(manager.getEpic(5));
+        System.out.println(manager.getEpic(6));
+
+        manager.updateEpic(new Epic("Эпик 5", "Описание", 6));
+        manager.updateSubtask(new Subtask("Подзадача 3", "Описание", IN_PROGRESS, 3, 6));
+        manager.removeEpic(5);
+        System.out.println(manager.getAllSubTaskEpic());
+        manager.clearAllEpic();
+
+        history.getHistory();
     }
+}
 }

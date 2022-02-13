@@ -1,50 +1,48 @@
 package model;
 
+import manager.IsMemoryTaskManager;
+import model.Epic;
+import model.Status;
+import model.Subtask;
+import model.Task;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class Epic extends Task {
-    private Collection<Subtask> subtask = new ArrayList<>();
+public class Epic extends Subtask {
+    private final List<Subtask> subTasks = new ArrayList<>();
 
-
-    public Epic(String task, String description, int id) {
-        super(task, description, id);
+    public Epic(String task, String descriptionTask) {
+        super(task, descriptionTask);
     }
 
-    public Epic(String task, String description, int id, ArrayList<Subtask> subtask) {
-        super(task, description, id);
-        for (Subtask subTask : subtask) {
-            subTask.setAncestor(this);
-            this.subtask.add(subTask);
-        }
+    public Epic(String task, String descriptionTask, Integer epicId) {
+        super(task, descriptionTask, epicId);
     }
 
-
-    public ArrayList<Integer> getSubtaskId() {
-        ArrayList<Integer> ids = new ArrayList<>();
-        for (Subtask subtask : subtask) {
-            ids.add(subtask.getId());
+    public void addSubtask(Subtask subTask) {
+        for (Subtask epicSubtask : subTasks) {
+            if (epicSubtask.getTaskId().equals(subTask.getTaskId())) {
+                return;
+            }
         }
-        return ids;
+        subTasks.add(subTask);
+    }
+
+    public List<Subtask> getSubTasks() {
+        return subTasks;
     }
 
     @Override
     public String toString() {
-        return "model.Epic{" +
-                "subtasks=" + subtask +
-                ", task='" + task + '\'' +
-                ", id=" + id +
-                ", description='" + description + '\'' +
-                ", status=" + status +
+        return "tasks.Epic{" +
+                "task='" + getTask() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                ", id='" + getEpicId() + '\'' +
+                ", subTasks='" + subTasks + '\'' +
                 '}';
     }
-
-    public Collection<Subtask> getSubtask() {
-        return subtask;
-    }
-
-    public void setSubtask(Collection<Subtask> subtask) {
-        this.subtask = subtask;
-    }
-
 }
+
