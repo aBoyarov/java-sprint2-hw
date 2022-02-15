@@ -1,27 +1,26 @@
 package manager;
 
+import model.Epic;
+import model.Subtask;
 import model.Task;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class IsMemoryHistoryManager implements HistoryManager {
-    private static List<Integer> history = new LinkedList<>();
+    private static List<Integer> list = new LinkedList<>();
     private static final int SIZE = 10;
 
     @Override
     public void add(Task task) {
-        if(history.size() < SIZE){
-            history.add(task.getTaskId());
-        } else {
-            history.remove(0);
+        if(list.size() < SIZE){
+            list.add(task.getId());
+        }else {
+            list.remove(0);
         }
-
     }
 
+    @Override
     public List<Integer> getHistory() {
-        return history;
+        return list;
     }
-
-
 }

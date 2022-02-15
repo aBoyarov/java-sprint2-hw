@@ -5,171 +5,165 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static model.Status.DONE;
 import static model.Status.NEW;
 import static model.Status.IN_PROGRESS;
 
 public class IsMemoryTaskManager implements TaskManager {
-    private int id;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    @Override
-    public void addTask(Task task) {
-        task.setIdTask(generateId());
-        tasks.put(task.getTaskId(), task);
+    int id = 0;
+    Map<Integer, Task> tasks = new HashMap<>();
+    Map<Integer, Epic> epics = new HashMap<>();
+    Map<Integer, Subtask> subtasks = new HashMap<>();
+
+    //генерируем Id
+    private int createId() {
+        return ++id;
     }
 
+    //tasks
+//Получить список всех задач
     @Override
-    public void updateTask(Task task) {
-        tasks.put(task.getTaskId(), task);
+    public Map<Integer, Task> getTasks() {
+        return tasks;
     }
 
+    //Удалить все задачи
     @Override
-    public void removeTasks(int id) {
-        if (!tasks.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-        } else {
-            tasks.remove(id);
-            System.out.println("Задача удалена");
-        }
-    }
-
-    @Override
-    public void clearAllTasks() {
+    public void clearTasks() {
         tasks.clear();
     }
 
+    //Получить задачу по Id
     @Override
-    public Task getTask(int id) {
-        if (!tasks.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-            return null;
-        } else {
-            return tasks.get(id);
-        }
+    public Task getTaskById(int id) {
+        return tasks.get(id);
     }
 
+    //Создать новую задачу
     @Override
-    public List<Task> getAllTask() {
-        return new ArrayList<>(tasks.values());
+    public void newTask(Task task) {
+        task.setId(createId());
+        tasks.put(task.getId(), task);
     }
 
-
+    //Обновить задачу
     @Override
-    public void addSubtask(Subtask subtask) {
-        subtask.setIdTask(generateId());
-        subTasks.put(subtask.getTaskId(), subtask);
+    public void updateTask(Task task) {
+        tasks.put(task.getId(), task);
     }
 
+    //Удалить задачу по Id
     @Override
-    public void updateSubtask(Subtask subtask) {
-        subTasks.put(subtask.getTaskId(), subtask);
-        if (subtask.getEpicId() != null && epics.get(subtask.getEpicId()) != null) {
-            epics.get(subtask.getEpicId()).addSubtask(subtask);
-            updateEpicStatus(epics.get(subtask.getEpicId()));
-        }
-    }
-
-    @Override
-    public void removeSubtask(int id) {
-        if (!subTasks.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-        } else {
-            subTasks.remove(id);
-            System.out.println("Задача удалена");
-        }
-    }
-
-    @Override
-    public void clearAllSubtasks() {
-        subTasks.clear();
+    public void removeTaskById(int id) {
+        tasks.remove(id);
     }
 
 
+    //epics
+//Получить список всех эпиков
     @Override
-    public Subtask getSubtask(int id) {
-        if (!subTasks.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-            return null;
-        } else {
-            return subTasks.get(id);
-        }
+    public Map<Integer, Epic> getEpics() {
+        return epics;
     }
 
+    //Удалить все эпики
     @Override
-    public ArrayList<Subtask> getAllSubtask() {
-        return new ArrayList<>(subTasks.values());
-    }
-
-
-    @Override
-    public void addEpic(Epic epic) {
-        epic.setStatus(NEW);
-        epic.setEpicId(generateId());
-        epics.put(epic.getEpicId(), epic);
-    }
-
-    @Override
-    public void updateEpic(Epic epic) {
-        updateEpicStatus(epic);
-        epics.put(epic.getEpicId(), epic);
-    }
-
-    @Override
-    public void removeEpic(int id) {
-        if (!epics.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-        } else {
-            epics.remove(id);
-            System.out.println("Задача удалена");
-        }
-    }
-
-    @Override
-    public void clearAllEpic() {
+    public void clearEpics() {
         epics.clear();
     }
 
+    //Получить эпик по Id
     @Override
-    public Epic getEpic(int id) {
-        if (!epics.containsKey(id)) {
-            System.out.println("Такой задачи нет");
-            return null;
-        } else {
-            return epics.get(id);
-        }
+    public Epic getEpicById(int id) {
+        return epics.get(id);
+    }
+
+    //Создать новый эпик
+    @Override
+    public void newEpic(Epic epic) {
+        epic.setId(createId());
+        epics.put(epic.getId(), epic);
+
+    }
+
+    //Обновить эпик
+    @Override
+    public void updateEpic(Epic epic) {
+        epics.put(epic.getId(), epic);
+
+    }
+
+    //Удалить эпик по Id
+    @Override
+    public void removeEpicById(int id) {
+        epics.remove(id);
+
     }
 
     @Override
-    public ArrayList<Epic> getAllSubTaskEpic() {
-        return new ArrayList<>(epics.values());
-    }
-
-    @Override
-    public void updateEpicStatus(Epic epic) {
-        List<Status> generalStatus = new ArrayList<>();
-        for (Subtask subTask : epic.getSubTasks()) {
-            generalStatus.add(subTask.getStatus());
-        }
-        if (generalStatus.contains(IN_PROGRESS)) {
-            epic.setStatus(IN_PROGRESS);
-        } else if (generalStatus.contains(DONE)) {
-            epic.setStatus(DONE);
-        } else {
-            epic.setStatus(NEW);
+    public void updateStatusByEpic(Epic epic) {
+        for (Subtask subtask : epic.getSubtasks()) {
+            if (subtask.getStatus().equals(NEW)) {
+                epic.setStatus(NEW);
+            } else if (subtask.getStatus().equals(DONE)) {
+                epic.setStatus(DONE);
+            } else {
+                epic.setStatus(IN_PROGRESS);
+            }
         }
     }
 
+    //subtasks
+//Получить список всех подзадач
     @Override
-    public int generateId() {
-        return ++id;
+    public Map<Integer, Subtask> getSubtasks() {
+        return subtasks;
     }
+
+    //Удалить все подзадачи
+    @Override
+    public void clearSubtask() {
+        subtasks.clear();
+        System.out.println("Все подзадачи удалены");
+    }
+
+    //Получить подзадачу по Id
+    @Override
+    public Subtask getSubtaskById(int id) {
+        return subtasks.get(id);
+    }
+
+    //Создать новую подзадачу
+    @Override
+    public void newSubtask(Subtask subtask) {
+        subtask.setId(createId());
+        subtasks.put(subtask.getId(), subtask);
+
+    }
+
+    //Обновить подзадачу
+    @Override
+    public void updateSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+    }
+
+    //Удалить подзадачу по Id
+    @Override
+    public void removeSubtaskById(int id) {
+        subtasks.remove(id);
+    }
+
+    @Override
+    public List<Integer> getAllSubtasksByEpic(Epic epic) {
+        return null;
+    }
+
+    //Получить список подзадач определённого эпика
+
+
 }
 
 

@@ -4,46 +4,45 @@ import java.util.*;
 import model.*;
 
 public interface TaskManager {
-        public void addTask(Task task);
+    public Map<Integer, Task> getTasks();
 
-        public void updateTask(Task task);
+    public void clearTasks();
 
-        public void removeTasks(int id);
+    public Task getTaskById (int id);
 
-        public void clearAllTasks();
+    public void newTask(Task task);
 
-        public Task getTask(int id);
+    public void updateTask(Task task);
 
-        public List<Task> getAllTask();
+    public void removeTaskById(int id);
 
-        public void addSubtask(Subtask subtask);
+    public Map<Integer, Epic> getEpics();
 
-        public void updateSubtask(Subtask subtask);
+    public void clearEpics();
 
-        public void removeSubtask(int id);
+    public Epic getEpicById (int id);
 
-        public void clearAllSubtasks();
+    public void newEpic(Epic epic);
 
-        public Subtask getSubtask(int id);
+    public void updateEpic(Epic epic);
 
-        public ArrayList<Subtask> getAllSubtask();
+    public void removeEpicById(int id);
 
-        public void addEpic(Epic epic);
+    public Map<Integer, Subtask> getSubtasks();
 
-        public void updateEpic(Epic epic);
+    public void clearSubtask();
 
-        public void removeEpic(int id);
+    public Subtask getSubtaskById (int id);
 
-        public void clearAllEpic();
+    public void newSubtask(Subtask subtask);
 
-        public Epic getEpic(int id);
+    public void updateSubtask(Subtask subtask);
 
-        public ArrayList<Epic> getAllSubTaskEpic();
+    public void removeSubtaskById(int id);
 
-        public void updateEpicStatus(Epic epic);
+    public List<Integer> getAllSubtasksByEpic(Epic epic);
 
-        public int generateId();
+    public void updateStatusByEpic(Epic epic);
 
 
-
-}
+    }

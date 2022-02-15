@@ -1,11 +1,14 @@
 package manager;
 
+import model.Task;
+
 public class Manager {
-    public TaskManager getDefault(){
+    TaskManager getDefault(){
         return new IsMemoryTaskManager();
     }
 
     HistoryManager getDefaultHistory(){
         return new IsMemoryHistoryManager();
     }
+
 }
