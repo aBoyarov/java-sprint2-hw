@@ -1,11 +1,10 @@
 
-import manager.IsMemoryHistoryManager;
-import manager.IsMemoryTaskManager;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,8 +13,8 @@ import static model.Status.*;
 public class Main {
     public static void main(String[] args) {
         List<Subtask> subtaskList = new LinkedList<>();
-        IsMemoryTaskManager manager = new IsMemoryTaskManager();
-        IsMemoryHistoryManager isMemoryHistoryManager = new IsMemoryHistoryManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+        InMemoryHistoryManager isMemoryHistoryManager = new InMemoryHistoryManager();
 
         Task task1 = new Task("Задача 1", "Описание", NEW);
         Task task2 = new Task("Задача 1", "Описание", NEW);

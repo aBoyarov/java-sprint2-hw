@@ -1,12 +1,10 @@
 package manager;
 
-import model.Epic;
-import model.Subtask;
 import model.Task;
 
 import java.util.*;
 
-public class IsMemoryHistoryManager implements HistoryManager {
+public class InMemoryHistoryManager implements HistoryManager {
     private static List<Integer> list = new LinkedList<>();
     private static final int SIZE = 10;
 

@@ -1,7 +1,6 @@
 package manager;
 
 import model.Epic;
-import model.Status;
 import model.Subtask;
 import model.Task;
 
@@ -11,12 +10,16 @@ import static model.Status.DONE;
 import static model.Status.NEW;
 import static model.Status.IN_PROGRESS;
 
-public class IsMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
 
     int id = 0;
-    Map<Integer, Task> tasks = new HashMap<>();
-    Map<Integer, Epic> epics = new HashMap<>();
-    Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+
+    public InMemoryTaskManager(int id) {
+        this.id = id;
+    }
 
     //генерируем Id
     private int createId() {
@@ -160,8 +163,6 @@ public class IsMemoryTaskManager implements TaskManager {
     public List<Subtask> getAllSubtasksByEpic(Epic epic) {
         return epic.getSubtasks();
     }
-
-    //Получить список подзадач определённого эпика
 
 
 }
