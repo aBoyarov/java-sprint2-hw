@@ -35,16 +35,18 @@ public class Main {
         isMemoryHistoryManager.add(subtask2);
 
 
-
         Epic epic1 = new Epic("Эпик 1", "Описание", NEW, subtaskList);
         manager.newEpic(epic1);
         isMemoryHistoryManager.add(epic1);
 
 
         for (Integer count : isMemoryHistoryManager.getHistory()) {
-            System.out.println("история " + manager.getTaskById(count) + "\n" + manager.getEpicById(count));
+                System.out.println("история " + manager.getTaskById(count));
         }
 
+        for (Integer count : isMemoryHistoryManager.getHistory()) {
+            System.out.println("история " + manager.getEpicById(count));
+        }
     }
 }
 
