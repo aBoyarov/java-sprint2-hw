@@ -40,7 +40,7 @@ public interface TaskManager {
 
     public void removeSubtaskById(int id);
 
-    public List<Integer> getAllSubtasksByEpic(Epic epic);
+    public List<Subtask> getAllSubtasksByEpic(Epic epic);
 
     public void updateStatusByEpic(Epic epic);
 

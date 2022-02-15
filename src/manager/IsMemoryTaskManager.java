@@ -157,8 +157,8 @@ public class IsMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Integer> getAllSubtasksByEpic(Epic epic) {
-        return null;
+    public List<Subtask> getAllSubtasksByEpic(Epic epic) {
+        return epic.getSubtasks();
     }
 
     //Получить список подзадач определённого эпика
