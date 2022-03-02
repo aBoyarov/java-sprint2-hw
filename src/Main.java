@@ -1,6 +1,8 @@
 
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
+import manager.Manager;
+import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -39,13 +41,7 @@ public class Main {
         isMemoryHistoryManager.add(epic1);
 
 
-        for (Integer count : isMemoryHistoryManager.getHistory()) {
-                System.out.println("история " + manager.getTaskById(count));
-        }
-
-        for (Integer count : isMemoryHistoryManager.getHistory()) {
-            System.out.println("история " + manager.getEpicById(count));
-        }
+        System.out.println(isMemoryHistoryManager.getHistory());
     }
 }
 
