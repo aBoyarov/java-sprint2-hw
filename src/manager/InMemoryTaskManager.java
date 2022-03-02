@@ -17,6 +17,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
 
+    public InMemoryTaskManager() {
+    }
+
+    public InMemoryTaskManager(HistoryManager defaultHistory) {
+    }
 
 
     //генерируем Id

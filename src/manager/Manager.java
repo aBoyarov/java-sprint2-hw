@@ -1,14 +1,16 @@
 package manager;
 
 public class Manager {
-    private static HistoryManager historyManager;
+    private static InMemoryHistoryManager inMemoryHistoryManager;
+
 
     public static HistoryManager getDefaultHistory() {
-        return historyManager;
-    }
-//я случайно))
-    public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return inMemoryHistoryManager;
     }
 
+
+    public static TaskManager getDefault() {
+        return new InMemoryTaskManager(getDefaultHistory());
+    }
 }
+
