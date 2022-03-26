@@ -1,31 +1,34 @@
 package model;
-import static model.Status.*;
 
-
+import static model.TaskTypes.SUBTASK;
 
 public class Subtask extends Task {
+    int epicId;
 
-    public int EpicId;
-
-    public Subtask(String name, String description, Status status, int epicId) {
-        super(name, description, status);
-        EpicId = epicId;
+    public Subtask(String name, String decision, int epicId) {
+        super(name, decision);
+        this.type = SUBTASK;
+        this.epicId = epicId;
     }
 
+    public Subtask(String name, String decision, int id, Status status, int epicId) {
+        super(name, decision, id, status);
+        this.epicId = epicId;
+        this.type = SUBTASK;
+    }
 
     public int getEpicId() {
-        return EpicId;
+        return epicId;
     }
-
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "EpicId=" + EpicId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return "Подзадача в эпике - " + epicId + '\n' +
+                "Название - " + name + '\n' +
+                "Описание - " + decision + '\n' +
+                "ID - " + id + '\n' +
+                "Статус - " + status + '\n' +
+                "--------------------------------------" + '\n' +
+                '\n';
     }
 }

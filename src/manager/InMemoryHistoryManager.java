@@ -1,73 +1,102 @@
 package manager;
 
 import model.Task;
-import org.w3c.dom.Node;
 
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    class Node<Task> {
-        public Node<Task> prev;
-        public Task data;
-        public Node<Task> next;
+
+    static class Node<Task> {
+        Node<Task> prev;
+        Task data;
+        Node<Task> next;
+
         public Node(Node<Task> prev, Task data, Node<Task> next) {
             this.prev = prev;
             this.data = data;
             this.next = next;
         }
     }
-    private Map<Integer, Node<Task>> map = new HashMap<>();
-    private Node<Task> first;
-    private Node<Task> last;
+
+
+    private static Map<Integer, Node<Task>> map = new HashMap<>();
+    private static Node<Task> head;
+    private static Node<Task> tail;
+
     @Override
     public void add(Task task) {
         linkLast(task);
     }
-    void linkLast(Task task) {
+
+    public void linkLast(Task task) {
         if (map.containsKey(task.getId())) {
-            Node<Task> node = map.get(task.getId());
-            removeNode(node);
+            remove(task.getId());
         }
-        addNode(task);
+        addNodeToMap(task);
     }
-    public void addNode(Task data) {
-        final Node<Task> lastt = last;
-        final Node<Task> newNode = new Node<>(lastt, data, null);
-        last = newNode;
-        if (lastt == null)
-            first = newNode;
-        else
-            lastt.next = newNode;
-        map.put(data.getId(), last);
+
+    public void addNodeToMap(Task task) {
+        Node<Task> l = tail;
+        Node<Task> newNode = new Node<>(l, task, null);
+        tail = newNode;
+        if (l == null) {
+            head = newNode;
+        } else {
+            l.next = newNode;
+        }
+        map.put(task.getId(), tail);
     }
+
     @Override
     public void remove(int id) {
-        Node<Task> rem = map.get(id);
-        removeNode(rem);
+        removeNode(map.get(id), id);
     }
-    public void removeNode(Node<Task> data) {
-        Node<Task> prev = data.prev;
-        Node<Task> next = data.next;
-        if (next == null) {
-            next.prev = prev;
+
+    public void removeNode(Node<Task> node, int key) {
+        Node<Task> p = node.prev;
+        Node<Task> n = node.next;
+        if (p == null) {
+            head = n;
         } else {
-            last = prev;
+            p.next = n;
         }
-        if (prev == null) {
-            prev.next = next;
+        if (n == null) {
+            tail = p;
         } else {
-            first = next;
+            n.prev = p;
         }
+        map.remove(key);
     }
+
     @Override
     public List<Task> getHistory() {
+        return getTask();
+    }
+
+    public List<Task> getTask() {
         List<Task> tasks = new ArrayList<>();
-        Node<Task> node = first;
+        Node<Task> node = head;
         while (node != null) {
             tasks.add(node.data);
             node = node.next;
         }
         return tasks;
     }
-}
+    static String toString(HistoryManager manager){
+        List<Task> history = new ArrayList<>(manager.getHistory());
+        StringBuilder builder = new StringBuilder();
+        for(Task task : history){
+            builder.append(task.getId()).append(",");
+        }
+        return builder.toString();
+    }
 
+    static List<Integer> fromString(String value){
+        String[] arr = value.split(",");
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            list.add(Integer.parseInt(arr[i]));
+        }
+        return list;
+    }
+}

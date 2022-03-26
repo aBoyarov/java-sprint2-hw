@@ -1,48 +1,59 @@
 package manager;
 
-import java.util.*;
-import model.*;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+
+import java.util.Map;
 
 public interface TaskManager {
-    public Map<Integer, Task> getTasks();
 
-    public void clearTasks();
+    /**
+     * TASKS
+     */
 
-    public Task getTaskById (int id);
+    Map<Integer, Task> getAllTasks();
 
-    public void newTask(Task task);
+    void deleteAllTasks();
 
-    public void updateTask(Task task);
+    Task getTaskById(int id);
 
-    public void removeTaskById(int id);
+    void newTask(Task task);
 
-    public Map<Integer, Epic> getEpics();
+    void updateTask(Task task);
 
-    public void clearEpics();
+    void deleteTaskById(int id);
 
-    public Epic getEpicById (int id);
+    /**
+     * EPICS
+     */
 
-    public void newEpic(Epic epic);
+    Map<Integer, Epic> getAllEpics();
 
-    public void updateEpic(Epic epic);
+    void deleteAllEpics();
 
-    public void removeEpicById(int id);
+    Epic getEpicById(int id);
 
-    public Map<Integer, Subtask> getSubtasks();
+    void newEpic(Epic epic);
 
-    public void clearSubtask();
+    void deleteEpicById(int id);
 
-    public Subtask getSubtaskById (int id);
+    /**
+     * SUDTASK
+     */
 
-    public void newSubtask(Subtask subtask);
+    Map<Integer, Subtask> getAllSubtask();
 
-    public void updateSubtask(Subtask subtask);
+    void deleteAllSubtasks();
 
-    public void removeSubtaskById(int id);
+    Subtask getSubtaskById(int id);
 
-    public List<Subtask> getAllSubtasksByEpic(Epic epic);
+    void newSubtask(Subtask subtask);
 
-    public void updateStatusByEpic(Epic epic);
+    void updateSubtask(Subtask subtask);
 
+    void deleteSubtaskById(int id);
 
-    }
+    void deleteAllSubtasksByEpic(int epicId);
+
+}
