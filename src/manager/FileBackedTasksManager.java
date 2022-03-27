@@ -1,5 +1,6 @@
 package manager;
 
+import exception.ManagerSaveException;
 import model.Epic;
 import model.Status;
 import model.Subtask;
@@ -34,7 +35,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 writer.write(str + '\n');
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException();
         }
     }
 
@@ -82,7 +83,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 backed.fromString(str);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException();
         }
         return backed;
     }
