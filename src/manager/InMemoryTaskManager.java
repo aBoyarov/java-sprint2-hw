@@ -18,14 +18,13 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
 
 
-
     private int createId() {
         return ++id;
     }
 
     public TreeSet<Task> getPrioritizedTasks() {
         TreeSet<Task> set = new TreeSet<>();
-        for (Map.Entry<Integer, Task> task : tasks.entrySet()){
+        for (Map.Entry<Integer, Task> task : tasks.entrySet()) {
             set.add(task.getValue());
         }
         for (Map.Entry<Integer, Subtask> subtask : subtasks.entrySet()) {
@@ -69,6 +68,13 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void newTask(Task task) {
+        for (Task taskTime : getPrioritizedTasks()) {
+            if (task.getStartTime().isBefore(taskTime.getEndTime())
+                    && task.getEndTime().isAfter(taskTime.getStartTime())) {
+                System.out.println("Задачи не должны пересекаться по времени.");
+                return;
+            }
+        }
         task.setId(createId());
         tasks.put(task.getId(), task);
     }
@@ -204,6 +210,13 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void newSubtask(Subtask subtask) {
+        for (Task subtaskTime : getPrioritizedTasks()) {
+            if (subtask.getStartTime().isBefore(subtaskTime.getEndTime())
+                    && subtask.getEndTime().isAfter(subtaskTime.getStartTime())) {
+                System.out.println("Подзадачи не должны пересекаться по времени.");
+                return;
+            }
+        }
         for (Map.Entry<Integer, Epic> epic : epics.entrySet()) {
             if (epic.getKey().equals(subtask.getEpicId())) {
                 subtask.setId(createId());
