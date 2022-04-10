@@ -1,5 +1,6 @@
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
+import manager.Manager;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
@@ -14,6 +15,18 @@ public class Main {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         Task taskTime = new Task(
+                "Сходить в магазин",
+                "Купить продукты",
+                LocalDateTime.of(2022, 7, 14, 11, 12),
+                Duration.ofMinutes(30));
+
+        Task task2 = new Task(
+                "Сходить в магазин",
+                "Купить продукты",
+                LocalDateTime.of(2022, 7, 14, 11, 12),
+                Duration.ofMinutes(30));
+
+        Task task3 = new Task(
                 "Сходить в магазин",
                 "Купить продукты",
                 LocalDateTime.of(2022, 7, 14, 11, 12),
@@ -38,9 +51,11 @@ public class Main {
                 2);
 
         manager.newTask(taskTime);
+        manager.newTask(task2);
         manager.newEpic(epicTime);
         manager.newSubtask(subtaskTime);
         manager.newSubtask(secondSubtaskTime);
-        System.out.println(manager.getPrioritizedTasks());
+        manager.getTaskById(1);
+        System.out.println(Manager.getDefaultHistory().getHistory());
     }
 }

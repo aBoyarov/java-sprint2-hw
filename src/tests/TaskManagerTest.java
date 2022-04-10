@@ -2,11 +2,14 @@ package tests;
 
 import manager.HistoryManager;
 import manager.InMemoryHistoryManager;
+import manager.Manager;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Test;
+
+import java.util.LinkedList;
 
 import static model.Status.DONE;
 import static model.Status.IN_PROGRESS;
@@ -64,12 +67,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldDeleteTaskById() {
         Task task = new Task("testTask", "testGetTask");
         manager.newTask(task);
-        try {
-            manager.deleteTaskById(1);
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
+        manager.getTaskById(1);
+        manager.deleteTaskById(1);
         assertNull(manager.getTaskById(1), "Задача не была удалена.");
+
     }
 
     /**
@@ -104,11 +105,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldDeleteEpicById() {
         Epic epic = new Epic("testEpic", "testGetAllEpics");
         manager.newEpic(epic);
-        try {
-            manager.deleteEpicById(1);
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
+        manager.getEpicById(1);
+        manager.deleteEpicById(1);
         assertNull(manager.getEpicById(1), "Эпик не был удален.");
     }
 
@@ -175,11 +173,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask = new Subtask("testEpic", "testGetAllEpics", 1);
         manager.newEpic(epic);
         manager.newSubtask(subtask);
-        try {
-            manager.deleteSubtaskById(2);
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
+        manager.getSubtaskById(2);
+        manager.deleteSubtaskById(2);
         assertNull(manager.getSubtaskById(2), "Задача не была удалена.");
     }
 
@@ -199,23 +194,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldBeHistoryIsEmpty() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
         Task task = new Task("test task", "test History");
         manager.newTask(task);
-        manager.getTaskById(1);
-        assertEquals(task, historyManager.getHistory().get(0), "История пуста.");
+        assertTrue(Manager.getDefaultHistory().getHistory().isEmpty(), "История не пуста.");
     }
 
     @Test
-    void shouldRemoveTaskFromHistory(){
-        HistoryManager historyManager = new InMemoryHistoryManager();
+    void shouldRemoveTaskFromHistory() {
         Task task = new Task("test task", "test History");
         manager.newTask(task);
-        try {
-            manager.deleteTaskById(1);
-        }catch (NullPointerException e){
-            System.out.println(e.getMessage());
-        }
-        assertTrue(historyManager.getHistory().isEmpty(), "Задача не удалена.");
+        manager.getTaskById(1);
+        manager.deleteTaskById(1);
+        assertTrue(Manager.getDefaultHistory().getHistory().isEmpty(), "Задача не удалена.");
     }
 }
