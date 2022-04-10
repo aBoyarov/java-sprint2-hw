@@ -1,30 +1,67 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import static model.Status.NEW;
 import static model.TaskTypes.TASK;
 
-public class Task {
+public class Task{
     protected String name;
-    protected String decision;
+    protected String description;
     protected int id;
     protected Status status;
     protected TaskTypes type;
+    protected LocalDateTime startTime;
+    protected Duration duration;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-    public Task(String name, String decision, int id, Status status) {
+
+    public Task(String name, String description, int id, Status status) {
         this.name = name;
-        this.decision = decision;
+        this.description = description;
         this.id = id;
         this.status = status;
         this.type = TASK;
     }
 
-    public Task(String name, String decision) {
+    public Task(String name, String description) {
         this.name = name;
-        this.decision = decision;
+        this.description = description;
         this.status = NEW;
         this.type = TASK;
+    }
+
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.status = NEW;
+        this.type = TASK;
+
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     public String getName() {
@@ -35,12 +72,12 @@ public class Task {
         this.name = name;
     }
 
-    public String getDecision() {
-        return decision;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecision(String decision) {
-        this.decision = decision;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getId() {
@@ -70,25 +107,30 @@ public class Task {
         Task task = (Task) o;
         return id == task.id
                 && Objects.equals(name, task.name)
-                && Objects.equals(decision, task.decision)
+                && Objects.equals(description, task.description)
                 && status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, decision, id, status);
+        return Objects.hash(name, description, id, status);
     }
+
 
     @Override
     public String toString() {
         return " Задача " + '\n' +
                 "Название - " + name + '\n' +
-                "Описание - " + decision + '\n' +
+                "Описание - " + description + '\n' +
                 "ID - " + id + '\n' +
                 "Статус - " + status + '\n' +
+                "Предполагаемое время начала задачи - " + formatter.format(startTime) + '\n' +
+                "Время окончания задачи - " + formatter.format(getEndTime()) + '\n' +
                 "----------------------------------------------------------------------------" + '\n' +
                 '\n';
     }
+
+
 }
 
 

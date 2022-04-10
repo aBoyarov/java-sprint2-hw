@@ -19,7 +19,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
-    private static Map<Integer, Node<Task>> map = new HashMap<>();
+    private static final Map<Integer, Node<Task>> map = new HashMap<>();
     private static Node<Task> head;
     private static Node<Task> tail;
 
@@ -82,20 +82,21 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return tasks;
     }
-    static String toString(HistoryManager manager){
-        List<Task> history = new ArrayList<>(manager.getHistory());
+
+    static String toString(HistoryManager manager) {
+        List<Task> list = manager.getHistory();
         StringBuilder builder = new StringBuilder();
-        for(Task task : history){
+        for (Task task : list) {
             builder.append(task.getId()).append(",");
         }
         return builder.toString();
     }
 
-    static List<Integer> fromString(String value){
+    static List<Integer> fromString(String value) {
         String[] arr = value.split(",");
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++) {
-            list.add(Integer.parseInt(arr[i]));
+        for (String s : arr) {
+            list.add(Integer.parseInt(s));
         }
         return list;
     }

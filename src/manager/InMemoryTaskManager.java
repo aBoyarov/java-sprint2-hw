@@ -5,29 +5,38 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static model.Status.DONE;
 import static model.Status.NEW;
 import static model.Status.IN_PROGRESS;
 
 public class InMemoryTaskManager implements TaskManager {
-    Map<Integer, Task> tasks = new HashMap<>();
-    Map<Integer, Epic> epics = new HashMap<>();
-    Map<Integer, Subtask> subtasks = new HashMap<>();
-    int id = 0;
+    protected Map<Integer, Task> tasks = new HashMap<>();
+    protected Map<Integer, Epic> epics = new HashMap<>();
+    protected Map<Integer, Subtask> subtasks = new HashMap<>();
+    private int id = 0;
 
 
     private int createId() {
         return ++id;
     }
 
+    public List<Task> getPrioritizedTasks() {
+        List<Task> list = new ArrayList<>();
+        for (Map.Entry<Integer, Task> task : tasks.entrySet()){
+            list.add(task.getValue());
+        }
+        for (Map.Entry<Integer, Subtask> subtask : subtasks.entrySet()) {
+            list.add(subtask.getValue());
+        }
+        list.sort((Task o1, Task o2) -> o1.getStartTime().compareTo(o2.getStartTime()));
+        return list;
+    }
+
     /**
      * TASKS методы
-     * 1. Полученик списка всех задач
+     * 1. Получение списка всех задач
      */
     @Override
     public Map<Integer, Task> getAllTasks() {
@@ -47,10 +56,11 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Task getTaskById(int id) {
-        if (id == 0) {
-            System.out.println("Индексы всех задач начинаются с 1");
+        try {
+            Manager.getDefaultHistory().add(tasks.get(id));
+        } catch (NullPointerException e) {
+            System.out.println("Нет задачи с индексом " + id);
         }
-        Manager.getDefaultHistory().add(tasks.get(id));
         return tasks.get(id);
     }
 
@@ -75,15 +85,24 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * 6. Удаление задачи по идентификатору
+     * 6. Завершение задачи
+     */
+    @Override
+    public void endTask(Task task) {
+        tasks.get(task.getId()).setStatus(DONE);
+    }
+
+    /**
+     * 7. Удаление задачи по идентификатору
      */
     @Override
     public void deleteTaskById(int id) {
-        if (id == 0) {
-            System.out.println("Индексы всех задач начинаются с 1");
-        } else {
-            Manager.getDefaultHistory().remove(id);
+        if (tasks.containsKey(id)) {
             tasks.remove(id);
+            Manager.getDefaultHistory().remove(id);
+            System.out.println("Задача с индексом " + id + " удалена");
+        } else {
+            System.out.println("Нет задачи с индексом " + id);
         }
     }
 
@@ -109,9 +128,14 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Epic getEpicById(int id) {
-        Manager.getDefaultHistory().add(epics.get(id));
+        try {
+            Manager.getDefaultHistory().add(epics.get(id));
+        } catch (NullPointerException e) {
+            System.out.println("Нет эпика с индексом " + id);
+        }
         return epics.get(id);
     }
+
 
     /**
      * 4. Создание эпика
@@ -128,18 +152,19 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void deleteEpicById(int id) {
-        if (id == 0) {
-            System.out.println("Индексы всех эпиков начинаются с 1" + '\n');
-        } else {
+        if (epics.containsKey(id)) {
             List<Subtask> list = epics.get(id).getSubtasksId();
             for (Subtask subtask : list) {
                 subtasks.remove(subtask.getId());
             }
             epics.get(id).getSubtasksId().clear();
-            Manager.getDefaultHistory().remove(id);
             epics.remove(id);
+            Manager.getDefaultHistory().remove(id);
+        } else {
+            System.out.println("Нет эпика с индексом" + id);
         }
     }
+
 
     /**
      * SUBTASK методы
@@ -166,7 +191,11 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Subtask getSubtaskById(int id) {
-        Manager.getDefaultHistory().add(subtasks.get(id));
+        try {
+            Manager.getDefaultHistory().add(subtasks.get(id));
+        } catch (NullPointerException e) {
+            System.out.println("Нет подзадачи с индексом " + id);
+        }
         return subtasks.get(id);
     }
 
@@ -193,47 +222,62 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.get(subtask.getId()).getStatus().equals(NEW)) {
             subtask.setStatus(IN_PROGRESS);
         }
-        subtasks.get(subtask.getId()).setStatus(IN_PROGRESS);
         epics.get(subtask.getEpicId()).setStatus(IN_PROGRESS);
+        checkEpicStatus(subtask);
+    }
+
+    /**
+     * 6. Завершение подзадачи
+     */
+    @Override
+    public void endSubtask(Subtask subtask) {
+        subtask.setStatus(DONE);
+        epics.get(subtask.getEpicId()).setStatus(IN_PROGRESS);
+        checkEpicStatus(subtask);
+    }
+
+    /**
+     * 7. Проверка статуса эпика
+     */
+    @Override
+    public void checkEpicStatus(Subtask subtask) {
         List<Status> list = new ArrayList<>();
-        for (Subtask subtask1 : epics.get(subtask.getEpicId()).getSubtasksId()) {
-            list.add(subtask1.getStatus());
+        for (Subtask sub : epics.get(subtask.getEpicId()).getSubtasksId()) {
+            list.add(sub.getStatus());
         }
         if (!list.contains(IN_PROGRESS) && !list.contains(NEW)) {
             epics.get(subtask.getEpicId()).setStatus(DONE);
         }
     }
 
-
     /**
-     * 6. Удаление подзадачи по идентификатору
+     * 8. Удаление подзадачи по идентификатору
      */
     @Override
     public void deleteSubtaskById(int id) {
-        if (id != 0) {
+        if (subtasks.containsKey(id)) {
             subtasks.remove(id);
             Manager.getDefaultHistory().remove(id);
             for (Map.Entry<Integer, Epic> epic : epics.entrySet()) {
                 epic.getValue().getSubtasksId().removeIf(subtask -> subtask.getId() == id);
             }
         } else {
-            System.out.println("Индексы всех подзадач начинаются с 1" + '\n');
+            System.out.println("Нет подзадачи с индексом " + id);
         }
     }
 
     /**
-     * 7. Удаление всех подзадач в эпике
+     * 9. Удаление всех подзадач в эпике
      */
     @Override
     public void deleteAllSubtasksByEpic(int epicId) {
-        if (epicId != 0) {
-            List<Subtask> list = epics.get(epicId).getSubtasksId();
-            for (Subtask subtask : list) {
+        if (epics.containsKey(epicId)) {
+            for (Subtask subtask : epics.get(epicId).getSubtasksId()) {
                 subtasks.remove(subtask.getId());
             }
             epics.get(epicId).getSubtasksId().clear();
         } else {
-            System.out.println("Индексы всех эпиков начинаются с 1" + '\n');
+            System.out.println("Нет эпика с индексом " + epicId);
         }
     }
 }
