@@ -23,16 +23,15 @@ public class InMemoryTaskManager implements TaskManager {
         return ++id;
     }
 
-    public List<Task> getPrioritizedTasks() {
-        List<Task> list = new ArrayList<>();
+    public TreeSet<Task> getPrioritizedTasks() {
+        TreeSet<Task> set = new TreeSet<>();
         for (Map.Entry<Integer, Task> task : tasks.entrySet()){
-            list.add(task.getValue());
+            set.add(task.getValue());
         }
         for (Map.Entry<Integer, Subtask> subtask : subtasks.entrySet()) {
-            list.add(subtask.getValue());
+            set.add(subtask.getValue());
         }
-        list.sort((Task o1, Task o2) -> o1.getStartTime().compareTo(o2.getStartTime()));
-        return list;
+        return set;
     }
 
     /**

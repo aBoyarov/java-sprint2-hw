@@ -23,13 +23,13 @@ public class Main {
         Task task2 = new Task(
                 "Сходить в магазин",
                 "Купить продукты",
-                LocalDateTime.of(2022, 7, 14, 11, 12),
+                LocalDateTime.of(2022, 7, 13, 11, 12),
                 Duration.ofMinutes(30));
 
         Task task3 = new Task(
                 "Сходить в магазин",
                 "Купить продукты",
-                LocalDateTime.of(2022, 7, 14, 11, 12),
+                LocalDateTime.of(2022, 7, 14, 11, 11),
                 Duration.ofMinutes(30));
 
         Epic epicTime = new Epic(
@@ -41,21 +41,21 @@ public class Main {
                 "Желательно со львом",
                 LocalDateTime.of(2022, 7, 14, 17, 0),
                 Duration.ofMinutes(55),
-                2);
+                4);
 
         Subtask secondSubtaskTime = new Subtask(
                 "Купить тапочки для бассейна",
                 "Кроксы само собой",
                 LocalDateTime.of(2022, 7, 14, 18, 0),
                 Duration.ofMinutes(20),
-                2);
+                4);
 
         manager.newTask(taskTime);
         manager.newTask(task2);
+        manager.newTask(task3);
         manager.newEpic(epicTime);
         manager.newSubtask(subtaskTime);
         manager.newSubtask(secondSubtaskTime);
-        manager.getTaskById(1);
-        System.out.println(Manager.getDefaultHistory().getHistory());
+        System.out.println(manager.getPrioritizedTasks());
     }
 }

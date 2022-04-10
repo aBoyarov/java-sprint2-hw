@@ -8,7 +8,7 @@ import java.util.Objects;
 import static model.Status.NEW;
 import static model.TaskTypes.TASK;
 
-public class Task{
+public class Task implements Comparable<Task>{
     protected String name;
     protected String description;
     protected int id;
@@ -131,6 +131,11 @@ public class Task{
     }
 
 
+    @Override
+    public int compareTo(Task o) {
+        if(this.getStartTime().isBefore(o.startTime))return -1;
+        else return 1;
+    }
 }
 
 

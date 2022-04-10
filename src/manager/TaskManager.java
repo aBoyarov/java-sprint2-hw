@@ -14,7 +14,7 @@ public interface TaskManager {
      * TASKS
      */
 
-    public List<Task> getPrioritizedTasks();
+    public TreeSet<Task> getPrioritizedTasks();
 
     Map<Integer, Task> getAllTasks();
 
