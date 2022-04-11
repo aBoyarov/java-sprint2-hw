@@ -219,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Map.Entry<Integer, Epic> epic : epics.entrySet()) {
             if (epic.getKey().equals(subtask.getEpicId())) {
                 subtask.setId(createId());
+                subtasks.put(subtask.getId(), subtask);
                 epics.get(subtask.getEpicId()).getSubtasksId().add(subtask);
             }
         }
