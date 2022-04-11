@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class Main {
     public static void main(String[] args) {
         TaskManager manager = new InMemoryTaskManager();
-        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         Task taskTime = new Task(
                 "Сходить в магазин",

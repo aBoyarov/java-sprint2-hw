@@ -55,12 +55,12 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Task getTaskById(int id) {
-        try {
+        if (tasks.get(id) != null) {
             Manager.getDefaultHistory().add(tasks.get(id));
-        } catch (NullPointerException e) {
-            System.out.println("Нет задачи с индексом " + id);
+            return tasks.get(id);
+        } else {
+            throw new IllegalArgumentException("Передан id несуществующей задачи.");
         }
-        return tasks.get(id);
     }
 
     /**
@@ -134,14 +134,13 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Epic getEpicById(int id) {
-        try {
+        if (epics.get(id) != null) {
             Manager.getDefaultHistory().add(epics.get(id));
-        } catch (NullPointerException e) {
-            System.out.println("Нет эпика с индексом " + id);
+            return epics.get(id);
+        } else {
+            throw new IllegalArgumentException("Передан id несуществующего эпика");
         }
-        return epics.get(id);
     }
-
 
     /**
      * 4. Создание эпика
@@ -197,12 +196,12 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public Subtask getSubtaskById(int id) {
-        try {
-            Manager.getDefaultHistory().add(subtasks.get(id));
-        } catch (NullPointerException e) {
-            System.out.println("Нет подзадачи с индексом " + id);
-        }
-        return subtasks.get(id);
+       if(subtasks.get(id) != null) {
+           Manager.getDefaultHistory().add(subtasks.get(id));
+           return subtasks.get(id);
+       }else {
+           throw new IllegalArgumentException("Передан id несуществующей подзадачи.");
+       }
     }
 
     /**
@@ -220,7 +219,6 @@ public class InMemoryTaskManager implements TaskManager {
         for (Map.Entry<Integer, Epic> epic : epics.entrySet()) {
             if (epic.getKey().equals(subtask.getEpicId())) {
                 subtask.setId(createId());
-                subtasks.put(subtask.getId(), subtask);
                 epics.get(subtask.getEpicId()).getSubtasksId().add(subtask);
             }
         }
