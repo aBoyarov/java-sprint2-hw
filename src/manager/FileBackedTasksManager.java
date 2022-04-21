@@ -1,18 +1,19 @@
 package manager;
 
 import model.Epic;
-import model.Status;
 import model.Subtask;
 import model.Task;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
-import static model.TaskTypes.*;
+import static model.TaskTypes.EPIC;
+import static model.TaskTypes.SUBTASK;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-
 
     String fileName;
 
@@ -20,58 +21,55 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.fileName = filename;
     }
 
+    public static void main(String[] args) {
+        TaskManager manager = new FileBackedTasksManager("C:\\Users\\boyar\\mySprint\\src\\tasks.csv");
 
-//    public static void main(String[] args) {
-//        TaskManager manager = new FileBackedTasksManager("C:\\Users\\boyar\\mySprint\\src\\tasks.csv");
-//
-//
-//        Task task1 = new Task("Стирка", "Постирать всю одежду");
-//        Task task2 = new Task("Уборка", "Сделать генеральную уборку");
-//        Task task3 = new Task("Готовка", "Приготовить на неделю");
-//        Task task4 = new Task("Прогулка", "Сходить в парк");
-//
-//        Epic epic1 = new Epic("Переезд", "Хочу переехать в другой город");
-//        Epic epic2 = new Epic("Поиск работы", "Пора идти в IT");
-//        Epic epic3 = new Epic("Поступление в ВУЗ", "Надо браться за голову");
-//        Epic epic4 = new Epic("Поход в театр", "ЭТО ШЕДЕВР!");
-//
-//
-//        Subtask subtask1 = new Subtask("Собрать вещи", "ВСЕ ВЕЩИ", 5);
-//        Subtask subtask2 = new Subtask("Написать резюме", "Или скачать))", 5);
-//        Subtask subtask3 = new Subtask("Подготовиться к экзаменам", "Опять не спать всю ночь", 7);
-//        Subtask subtask4 = new Subtask("Купить билеты", "Через приложение удобней", 8);
-//
-//
-//        manager.newTask(task1);
-//        manager.newTask(task2);
-//        manager.newTask(task3);
-//        manager.newTask(task4);
-//
-//        manager.newEpic(epic1);
-//        manager.newEpic(epic2);
-//        manager.newEpic(epic3);
-//        manager.newEpic(epic4);
-//
-//        manager.newSubtask(subtask1);
-//        manager.newSubtask(subtask2);
-//        manager.newSubtask(subtask3);
-//        manager.newSubtask(subtask4);
-//
-//        manager.getTaskById(1);
-//        manager.deleteTaskById(1);
-//        System.out.println(Manager.getDefaultHistory().getHistory());
+        Task taskTime = new Task(
+                "Сходить в магазин",
+                "Купить продукты",
+                LocalDateTime.of(2022, 7, 10, 10, 0),
+                Duration.ofMinutes(60));
 
-//        File file = new File("C:\\Users\\boyar\\mySprint\\src\\tasks.csv");
-//
-//
-//        System.out.println(FileBackedTasksManager.loadFromFile(file).getAllEpics());
-//        System.out.println(FileBackedTasksManager.loadFromFile(file).getAllSubtask());
-//        System.out.println(FileBackedTasksManager.loadFromFile(file).getAllTasks());
-//        System.out.println(Manager.getDefaultHistory().getHistory());
+        Task task2 = new Task(
+                "Сходить в магазин",
+                "Купить продукты",
+                LocalDateTime.of(2022, 7, 12, 13, 0),
+                Duration.ofMinutes(60));
 
+        Task task3 = new Task(
+                "Сходить в магазин",
+                "Купить продукты",
+                LocalDateTime.of(2022, 7, 14, 16, 0),
+                Duration.ofMinutes(60));
 
+        Epic epicTime = new Epic(
+                "Сходить в бассейн",
+                "Сегодня релакс");
 
+        Subtask subtaskTime = new Subtask(
+                "Купить полотенце для бассейна",
+                "Желательно со львом",
+                LocalDateTime.of(2022, 7, 16, 19, 0),
+                Duration.ofMinutes(60),
+                4);
 
+        Subtask secondSubtaskTime = new Subtask(
+                "Купить тапочки для бассейна",
+                "Кроксы само собой",
+                LocalDateTime.of(2022, 7, 18, 22, 0),
+                Duration.ofMinutes(60),
+                4);
+
+        manager.newTask(taskTime);
+        manager.newTask(task2);
+        manager.newTask(task3);
+        manager.newEpic(epicTime);
+        manager.newSubtask(subtaskTime);
+        manager.newSubtask(secondSubtaskTime);
+        for (Task task : manager.getPrioritizedTasks()) {
+            System.out.println(task);
+        }
+    }
 
     public void save() {
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -137,7 +135,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             while (reader.ready()) {
                 String str = reader.readLine();
                 Task task = backed.fromString(str);
-                if(task == null) continue;
+                if (task == null) continue;
                 if (task.getType().equals(SUBTASK)) {
                     backed.newSubtask((Subtask) task);
                 } else if (task.getType().equals(EPIC)) {

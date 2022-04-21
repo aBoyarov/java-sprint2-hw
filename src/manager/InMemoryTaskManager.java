@@ -70,7 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void newTask(Task task) {
         for (Task taskTime : getPrioritizedTasks()) {
             if (task.getStartTime().isBefore(taskTime.getEndTime())
-                    && task.getEndTime().isAfter(taskTime.getStartTime())) {
+                    || task.getEndTime().isBefore(taskTime.getStartTime())) {
                 System.out.println("Задачи не должны пересекаться по времени.");
                 return;
             }
@@ -211,7 +211,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void newSubtask(Subtask subtask) {
         for (Task subtaskTime : getPrioritizedTasks()) {
             if (subtask.getStartTime().isBefore(subtaskTime.getEndTime())
-                    && subtask.getEndTime().isAfter(subtaskTime.getStartTime())) {
+                    || subtask.getEndTime().isBefore(subtaskTime.getStartTime())) {
                 System.out.println("Подзадачи не должны пересекаться по времени.");
                 return;
             }

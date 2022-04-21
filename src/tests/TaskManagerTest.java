@@ -1,15 +1,11 @@
 package tests;
 
-import manager.HistoryManager;
-import manager.InMemoryHistoryManager;
 import manager.Manager;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Test;
-
-import java.util.LinkedList;
 
 import static model.Status.DONE;
 import static model.Status.IN_PROGRESS;

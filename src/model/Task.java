@@ -119,13 +119,14 @@ public class Task implements Comparable<Task>{
 
     @Override
     public String toString() {
-        return " Задача " + '\n' +
+        return "Задача " + '\n' +
                 "Название - " + name + '\n' +
                 "Описание - " + description + '\n' +
                 "ID - " + id + '\n' +
                 "Статус - " + status + '\n' +
                 "Предполагаемое время начала задачи - " + formatter.format(startTime) + '\n' +
                 "Время окончания задачи - " + formatter.format(getEndTime()) + '\n' +
+                "Продолжительность - " + getDuration().toMinutes() + " минут" + '\n' +
                 "----------------------------------------------------------------------------" + '\n' +
                 '\n';
     }

@@ -1,8 +1,6 @@
 package tests;
 
 import manager.FileBackedTasksManager;
-import manager.InMemoryTaskManager;
-import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -13,7 +11,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static model.Status.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
