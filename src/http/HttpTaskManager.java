@@ -23,13 +23,12 @@ public class HttpTaskManager extends FileBackedTasksManager {
         this.client = new KVTaskClient(url);
     }
 
-    public void saveManager(int key, String apiKey) throws IOException {
+    public void saveManager(int key, String apiKey)  {
         String json;
         Gson gson = new Gson();
-        FileReader reader = new FileReader(getFileName());
-        BufferedReader br = new BufferedReader(reader);
         ArrayList<String> values = new ArrayList<>();
-        try {
+        try (FileReader reader = new FileReader(getFileName());
+             BufferedReader br = new BufferedReader(reader)) {
             while (br.ready()) {
                 String line = br.readLine();
                 values.add(line);
